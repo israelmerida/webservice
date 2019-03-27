@@ -2,86 +2,90 @@ import web
 import config
 import json
 
-class Api_persons:
+class Api_cliente:
 
     def __init__(self):
         pass
         
-    def get(self, id_person):
+    def get(self, id_cliente):
         try:
             # http://0.0.0.0:8080/api_persons?user_hash=12345&action=get
-            if id_person == None:
-                result = config.model.get_all_persons()
-                persons_json = []
+            if id_cliente == None:
+                result = config.model.get_all_cliente()
+                clientes_json = []
                 for row in result:
                     tmp = dict(row)
-                    persons_json.append(tmp)
+                    clientes_json.append(tmp)
                 web.header('Content-Type', 'application/json')
-                return json.dumps(persons_json)
+                return json.dumps(clientes_json)
             else:
                 # http://0.0.0.0:8080/api_persons?user_hash=12345&action=get&id_person=1
-                result = config.model.get_persons(int(id_person))
-                persons_json = []
-                persons_json.append(dict(result))
+                result = config.model.get_cliente(int(id_cliente))
+                clientes_json = []
+                clientes_json.append(dict(result))
                 web.header('Content-Type', 'application/json')
-                return json.dumps(persons_json)
+                return json.dumps(clientes_json)
         except Exception as e:
             print "GET Error {}".format(e.args)
-            persons_json = '[]'
+            clientes_json = '[]'
             web.header('Content-Type', 'application/json')
-            return json.dumps(persons_json)
+            return json.dumps(clientes_json)
 
 # https://0.0.0.0:8080/api_persons?user_hash=12345&action=put&id_person=1&name=new&telephone=12345&email=new@email.com
-    def put(self, name,telephone,email):
+    def put(self, nombre,apellido_paterno,apellido_materno,telefono,email):
         try:
-            config.model.insert_persons(name,telephone,email)
-            persons_json = '[{200}]'
+            config.model.insert_cliente(nombre,apellido_paterno,apellido_materno,telefono,email)
+            clientes_json = '[{200}]'
             web.header('Content-Type', 'application/json')
-            return json.dumps(persons_json)
+            return json.dumps(clientes_json)
         except Exception as e:
             print "PUT Error {}".format(e.args)
             return None
 
 # http://0.0.0.0:8080/api_persons?user_hash=12345&action=get&id_person=1
-    def delete(self, id_person):
+    def delete(self, id_cliente):
         try:
-            config.model.delete_persons(id_person)
-            persons_json = '[{200}]'
+            config.model.delete_cliente(id_cliente)
+            clientes_json = '[{200}]'
             web.header('Content-Type', 'application/json')
-            return json.dumps(persons_json)
+            return json.dumps(clientes_json)
         except Exception as e:
             
             print "DELETE Error {}".format(e.args)
             return None
 
 # https://0.0.0.0:8080/api_persons?user_hash=12345&action=update&id_person=1&name=new&telephone=12345&email=new@email.com
-    def update(self, id_person, name,telephone,email):
+    def update(self,  id_cliente,nombre, apellido_paterno,apellido_materno,telefono,email):
         try:
-            config.model.update_persons(id_person,name,telephone,email)
-            persons_json = '[{200}]'
+            config.model.update_cliente(id_cliente,nombre,apellido_paterno,apellido_materno,telefono,email)
+            clientes_json = '[{200}]'
             web.header('Content-Type', 'application/json')
-            return json.dumps(persons_json)
+            return json.dumps(clientes_json)
         except Exception as e:
             print "GET Error {}".format(e.args)
-            persons_json = '[]'
+            clientes_json = '[]'
             web.header('Content-Type', 'application/json')
-            return json.dumps(persons_json)
+            return json.dumps(clientes_json)
 
     def GET(self):
         user_data = web.input(
             user_hash=None,
             action=None,
-            id_person=None,
-            name=None,
-            telephone=None,
+            id_cliente=None,
+            nombre=None,
+            apellido_paterno=None,
+            apellido_materno=None,
+            telefono=None,
             email=None,
         )
         try:
             user_hash = user_data.user_hash  # user validation
             action = user_data.action  # action GET, PUT, DELETE, UPDATE
-            id_person=user_data.id_person
-            name=user_data.name
-            telephone=user_data.telephone
+            id_cliente=user_data.id_cliente
+            nombre=user_data.nombre
+            apellido_paterno=user_data.apellido_paterno
+            apellido_materno=user_data.apellido_materno
+            telefono=user_data.telefono
             email=user_data.email
             
             #change de user_hash 
@@ -89,13 +93,13 @@ class Api_persons:
                 if action == None:
                     raise web.seeother('/404')
                 elif action == 'get':
-                    return self.get(id_person)
+                    return self.get(id_cliente)
                 elif action == 'put':
-                    return self.put(name,telephone,email)
+                    return self.put(nombre,apellido_paterno,apellido_materno,telefono,email)
                 elif action == 'delete':
-                    return self.delete(id_person)
+                    return self.delete(id_cliente)
                 elif action == 'update':
-                    return self.update(id_person, name,telephone,email)
+                    return self.update(id_cliente,nombre,apellido_paterno,apellido_materno,telefono,email)
             else:
                 raise web.seeother('/404')
         except Exception as e:

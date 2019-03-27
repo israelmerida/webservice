@@ -14,7 +14,7 @@ urls = (
     '/update/(.+)', 'application.controllers.clientes.update.Update',
     '/view/(.+)', 'application.controllers.clientes.view.View',
     '/delete/(.+)', 'application.controllers.clientes.delete.Delete',
-    '/api_cliente/?', 'application.api.clientes.api_cliente.Api_cliente'
+    '/api_cliente/?', 'application.api.cliente.api_cliente.Api_cliente'
 )
 
 if __name__ == "__main__":
